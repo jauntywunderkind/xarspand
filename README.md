@@ -17,11 +17,8 @@ jane 20
 $ echo -n "jimmy\njamie\njackie\n" | XARSPAND_PREFIX=false xarspand echo -n '"hi %,\nhow are you?\n\n"'
 hi jimmy,
 how are you?
-
 hi john,
 how are you?
-
 hi jane,
 how are you?
-
 ```

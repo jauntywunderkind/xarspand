@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-#set -x
 
 CMD_TEMPLATE="$*"
 interpolateCmd(){
@@ -12,8 +11,12 @@ while read -r input|| [ -n "$input" ]; do
 	# replace % in the $* with the line
 	cmd="$(interpolateCmd $input)"
 	# run the resulting command
+
+	# trying to preserve trailing \n, but giving up for now
+#	read -rd '' outputs < <( eval "$cmd" | sed 's/\\n/\
+#/g')  || true
 	outputs="$(eval $cmd | sed 's/\\n/\
-/g')"
+#/g')"
 
 	# for every line of the resulting command
 	while read -r output || [ -n "$output" ]; do
@@ -23,6 +26,6 @@ while read -r input|| [ -n "$input" ]; do
 			prefix="$input${XARSPAND_IFS:- }"
 		fi
 		# output
-		echo "$prefix$output"
-	done <<<"$outputs"
+		echo "$prefix$output${XARSPAND_POSTFIX:-}"
+	done <<< "$outputs"
 done

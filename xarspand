@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+set -x
+
+CMD_TEMPLATE="$*"
+interpolateCmd(){
+	echo "$CMD_TEMPLATE" | sed "s!%!$1!g"
+}
+
+# for every line of stdin
+while read -r input ; do
+	# replace % in the $* with the line
+	cmd="$(interpolateCmd $input)"
+	# run the resulting command
+	outputs="$(eval $cmd | sed 's/\\n/\
+/g')"
+
+	# for every line of the resulting command
+	while read -r output ; do
+		prefix=""
+		if [ -z "$XARSPAND_PREFIX" ] ; then
+			# output the line, and a separator
+			prefix="$input$IFS"
+		fi
+		# output
+		echo "$prefix$output"
+	done <<<"$outputs"
+done

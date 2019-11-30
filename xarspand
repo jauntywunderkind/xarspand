@@ -13,10 +13,9 @@ while read -r input|| [ -n "$input" ]; do
 	# run the resulting command
 
 	# trying to preserve trailing \n, but giving up for now
-#	read -rd '' outputs < <( eval "$cmd" | sed 's/\\n/\
-#/g')  || true
 	outputs="$(eval $cmd | sed 's/\\n/\
-#/g')"
+/g' ; printf x)"
+	outputs="${outputs%x}"
 
 	# for every line of the resulting command
 	while read -r output || [ -n "$output" ]; do

@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-set -x
+#set -x
 
 CMD_TEMPLATE="$*"
 interpolateCmd(){
@@ -8,7 +8,7 @@ interpolateCmd(){
 }
 
 # for every line of stdin
-while read -r input ; do
+while read -r input|| [ -n "$input" ]; do
 	# replace % in the $* with the line
 	cmd="$(interpolateCmd $input)"
 	# run the resulting command
@@ -16,11 +16,11 @@ while read -r input ; do
 /g')"
 
 	# for every line of the resulting command
-	while read -r output ; do
+	while read -r output || [ -n "$output" ]; do
 		prefix=""
 		if [ -z "$XARSPAND_PREFIX" ] ; then
-			# output the line, and a separator
-			prefix="$input$IFS"
+			# output the line, and a XARSPAND_IFS separator (or space)
+			prefix="$input${XARSPAND_IFS:- }"
 		fi
 		# output
 		echo "$prefix$output"
